@@ -78,8 +78,8 @@ class MenuItemDetailSerializer(serializers.ModelSerializer):
 
 
 class MenuCategorySerializer(serializers.ModelSerializer):
-
     items = MenuItemDetailSerializer(many=True)
+
     class Meta:
         model = MenuCategory
         fields = ['id', 'name', 'items']
