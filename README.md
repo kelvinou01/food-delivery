@@ -57,9 +57,10 @@
 | POST | rider/register/ | Register a rider account | Any |
 | GET | rider/sessions/ | List past and current sessions | Authenticated|
 | POST | rider/sessions/ | Start a new session | Authenticated|
-| POST | rider/sessions/{session_id}/end/ | End the current session | Authenticated|
-| POST | rider/sessions/{session_id}/extend/ | Delay delivery by a specified amount of time | Authenticated|
-| GET | rider/sessions/{session_id}/orders/ | List orders under session | Authenticated|
+| POST | rider/sessions/current/end/ | End the current session | Authenticated|
+| POST | rider/sessions/current/extend/ | Extend the current session | Authenticated|
+| POST | rider/sessions/current/orders/ | List orders under the current session | Authenticated|
+| GET | rider/sessions/{session_id}/orders/ | List orders under the session | Authenticated|
 | GET | rider/orders/ | List orders fulfilled by rider | Authenticated|
 | GET | rider/orders/{order_id}/ | Get order details | Authenticated|
 | POST | rider/orders/{order_id}/accept/ | Accept delivery request | Authenticated|
