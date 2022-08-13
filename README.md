@@ -22,7 +22,6 @@
 ### Merchant App
 | Request type | URL | Description | Permissions |
 |---|---|---|---|
-| POST | merchant/register/ | Register a merchant account | Any |
 | POST | merchant/restaurants/ | Create a restaurant | Authenticated |
 | GET | merchant/restaurants/{restaurant_id}/menu-hours/ | List the restaurant's menu hours | Authenticated |
 | POST | merchant/restaurants/{restaurant_id}/menu-hours/ | Update menu hours | Authenticated |
