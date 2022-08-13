@@ -10,7 +10,7 @@ from rest_framework import status
 
 from merchant.models import Order
 from merchant.serializers import OrderCancelSerializer
-from rider.mixins import ActiveSessionMixin
+from rider.mixins import CurrentSessionMixin
 from rider.models import Session
 from rider.permissions import IsDeliveringThisOrder, IsRider, RiderOwnsSession
 from rider.serializers import OrderDetailSerializer, OrderListSerializer, \
@@ -30,36 +30,53 @@ class SessionListCreate(generics.ListCreateAPIView):
             return SessionCreateSerializer 
 
 
-class SessionEnd(views.APIView, ActiveSessionMixin):
-    permission_classes = [IsAuthenticated, IsRider, RiderOwnsSession]
+class CurrentSessionEnd(views.APIView, CurrentSessionMixin):
+    permission_classes = [IsAuthenticated, IsRider]
 
     def post(self, request, *args, **kwargs):
-        self.check_session_is_active()
-        
         # TODO: Check if the rider has finished their last order
-        session = Session.objects.get(id=self.kwargs['session_id'])
+        session = self.get_current_session()
+        if session is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'No session currently active'})
         session.end_datetime = timezone.now()
         session.save()
         return Response(status=status.HTTP_200_OK)
 
  
-class SessionExtend(views.APIView, ActiveSessionMixin):
-    permission_classes = [IsAuthenticated, IsRider, RiderOwnsSession]
+class CurrentSessionExtend(views.APIView, CurrentSessionMixin):
+    permission_classes = [IsAuthenticated, IsRider]
     serializer_class = SessionExtendSerializer
 
     def post(self, request, *args, **kwargs):
-        self.check_session_is_active()
 
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        session = Session.objects.get(id=self.kwargs['session_id'])
+        session = self.get_current_session()
+        if session is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'No session currently active'})
+
         session.end_datetime = serializer.validated_data['end_datetime']
         session.save()
         return Response(status=status.HTTP_200_OK)
 
 
-class SessionOrdersList(generics.ListAPIView):
+class CurrentSessionOrderList(generics.ListAPIView, CurrentSessionMixin):
+    permission_classes = [IsAuthenticated, IsRider]
+    serializer_class = OrderListSerializer
+
+    def get_queryset(self):
+        session = self.get_current_session()
+        if session is None:
+            return Order.object.empty()
+
+        return Order.objects.filter(
+            delivery__isnull=False,
+            delivery__session=session, 
+        )
+
+
+class SessionOrderList(generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsRider, RiderOwnsSession]
     serializer_class = OrderListSerializer
 
