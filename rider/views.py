@@ -53,7 +53,6 @@ class CurrentSessionExtend(views.APIView, CurrentSessionMixin):
     serializer_class = SessionExtendSerializer
 
     def post(self, request, *args, **kwargs):
-
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
