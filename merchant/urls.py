@@ -1,13 +1,11 @@
 
 from django.urls import path
 
-from merchant.views import HolidayDetail, MenuDetail, MenuHoursListCreate, MenuItemDetail, MenuItemsListCreate, MenuListCreate, OrderCancel, OrderDelay, OrderFinishCooking, OrderList, OrderDetail, PriceAdjustment, RestaurantCreate, Status, HolidayListCreate
+from merchant.views import HolidayDetail, MenuDetail, MenuHoursListCreate, MenuItemDetail, MenuItemsListCreate, MenuListCreate, MerchantRegister, OrderCancel, OrderDelay, OrderFinishCooking, OrderList, OrderDetail, PriceAdjustment, RestaurantCreate, Status, HolidayListCreate
 
 app_name = 'Merchant'
 
 urlpatterns = [
-    # path('register/'),
-    # path('login/'), 
     path('restaurants/', RestaurantCreate.as_view(), name='restaurants'),
     path('restaurants/<int:restaurant_id>/menu-hours/', MenuHoursListCreate.as_view(), name='restuarants'),
     path('restaurants/<int:restaurant_id>/status/', Status.as_view(), name='status'),

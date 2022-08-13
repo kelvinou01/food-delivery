@@ -1,17 +1,28 @@
 from datetime import timedelta
 from django.utils import timezone
-from rest_framework.exceptions import ValidationError
 from django.db import transaction
-from rest_framework import fields
 from rest_framework import serializers
 from client.fields import ModelField
 from client.models import Client, Review
+from delivery.serializers import RegisterSerializer
 from delivery.settings import ADDITIONAL_DELIVERY_TIME_PER_METER, DELIVERY_COST_PER_METER
 
 from merchant.models import Delivery, Menu, MenuCategory, MenuItem, MenuItemOption, MenuItemOptionGroup, Order, OrderItem, OrderItemOption, OrderItemOptionGroup, Restaurant, SelfPickup
 from merchant.serializers import PriceAdjustmentSerializer
 from merchant.utils import calc_delivery_cost, calc_distance_from_coords, round_to_base
 from rider.models import Rider, Session
+
+
+class ClientRegisterSerializer(RegisterSerializer):
+    
+    class Meta(RegisterSerializer.Meta):
+        pass
+
+    @transaction.atomic
+    def create(self, validated_data):
+        user = super().create(validated_data)
+        Client.objects.create(user=user)
+        return user
 
 
 class RestaurantListSerializer(serializers.ModelSerializer):

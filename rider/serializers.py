@@ -1,10 +1,23 @@
 from django.utils import timezone
+from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from client.serializers import OrderItemListSerializer
+from delivery.serializers import RegisterSerializer
 from merchant.models import Order
-from rider.models import Session
+from rider.models import Rider, Session
 
+
+class RiderRegisterSerializer(RegisterSerializer):
+    
+    class Meta(RegisterSerializer.Meta):
+        pass
+    
+    @transaction.atomic
+    def create(self, validated_data):
+        user = super().create(validated_data)
+        Rider.objects.create(user=user)
+        return user
 
 class SessionListSerializer(serializers.ModelSerializer):
 

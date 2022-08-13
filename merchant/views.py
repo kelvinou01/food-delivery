@@ -12,12 +12,17 @@ from merchant.models import Holiday, MenuHours, MenuItem, Order, PauseHours, Res
 from merchant.permissions import IsRestaurantStaff, OrderIsForRestaurant, OrderItemIsInOrder
 from merchant.serializers import HolidaySerializer, MenuDetailSerializer, MenuHoursSerializer, \
     MenuListSerializer, MenuItemListSerializer, MenuItemDetailSerializer, OrderCancelSerializer, \
-    OrderDelaySerializer, OrderListSerializer, PriceAdjustmentSerializer, RestaurantSerializer, \
+    OrderDelaySerializer, OrderListSerializer, PriceAdjustmentSerializer, RestaurantSerializer, RegisterSerializer, \
     StatusSerializer
 
 
+class MerchantRegister(generics.CreateAPIView):
+     permission_classes = [IsAuthenticated, IsRestaurantStaff]
+     serializer_class = RegisterSerializer
+
+
 class RestaurantCreate(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff]
+    permission_classes = []
     serializer_class = RestaurantSerializer
     
 

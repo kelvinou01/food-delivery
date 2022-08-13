@@ -9,8 +9,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from client.models import Review
 from client.permissions import IsClient
-from client.serializers import DeliveryOrderCreateSerializer, MenuItemDetailSerializer, OrderDetailSerializer, ReviewSerializer, SelfPickupOrderCreateSerializer, OrderListSerializer, RestaurantDetailSerializer, RestaurantListSerializer
+from client.serializers import ClientRegisterSerializer, DeliveryOrderCreateSerializer, MenuItemDetailSerializer, OrderDetailSerializer, ReviewSerializer, SelfPickupOrderCreateSerializer, OrderListSerializer, RestaurantDetailSerializer, RestaurantListSerializer
+from delivery import settings
+from delivery.views import BaseRegister
 from merchant.models import MenuItem, Order, Restaurant
+
+
+class Register(BaseRegister):
+    serializer_class = ClientRegisterSerializer
+
 
 class RestaurantList(generics.ListAPIView):
     # TODO: Sort by closest
@@ -30,7 +37,6 @@ class RestaurantList(generics.ListAPIView):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
 
     
 class RestaurantDetail(generics.RetrieveAPIView):

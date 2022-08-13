@@ -2,15 +2,14 @@ from django.contrib import admin
 from django.urls import include, path
 
 from rider.views import OrderAccept, OrderCancel, OrderComplete, OrderDetail, OrderList, \
-    OrderPickup, SessionEnd, SessionExtend, SessionListCreate, SessionOrdersList
+    OrderPickup, CurrentSessionEnd, CurrentSessionExtend, RiderRegister, SessionListCreate, SessionOrderList, CurrentSessionOrderList
 
 
 app_name = 'Rider'
 
 
 urlpatterns = [
-    # path('register/'),
-    # path('login/'), 
+    path('register/', RiderRegister.as_view(), name='register'),
     path('sessions/', SessionListCreate.as_view(), name='sessions'),
     path('sessions/current/end/', CurrentSessionEnd.as_view(), name='current_session_end'),
     path('sessions/current/extend/', CurrentSessionExtend.as_view(), name='current_session_extend'),

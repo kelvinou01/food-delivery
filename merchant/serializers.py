@@ -5,14 +5,30 @@ from django.core.exceptions import ValidationError as ModelValidationError
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.db import IntegrityError, transaction
+from delivery.models import User
+from delivery.serializers import RegisterSerializer
 
-from merchant.models import Holiday, Menu, MenuCategory, MenuHours, MenuItem, MenuItemOption, MenuItemOptionGroup, Order, OrderCancellation, OrderItemPriceAdjustment, PauseHours, Restaurant, RestaurantStaff
+from merchant.models import Holiday, Menu, MenuCategory, MenuHours, MenuItem, MenuItemOption, MenuItemOptionGroup, Order, OrderCancellation, OrderItemPriceAdjustment, PauseHours, Restaurant, Merchant
+
+
+class MerchantRegisterSerializer(RegisterSerializer):
+    
+    class Meta(RegisterSerializer.Meta):
+        fields = RegisterSerializer.Meta.fields
+        extra_kwargs = RegisterSerializer.Meta.extra_kwargs
+        extra_kwargs.update({
+            field: {'write_only': 'True'} for field in fields
+        })
+        pass
+
 
 class RestaurantSerializer(serializers.ModelSerializer):
+    merchant = MerchantRegisterSerializer()
     
     class Meta:
         model = Restaurant
-        fields = ['name', 'address', 'latitude', 'longitude']
+        fields = ['name', 'address', 'latitude', 'longitude', 'merchant']
+
     
     @transaction.atomic
     def create(self, validated_data):
@@ -20,9 +36,10 @@ class RestaurantSerializer(serializers.ModelSerializer):
             name=validated_data['name'], address=validated_data['address'], 
             latitude=validated_data['latitude'], longitude=validated_data['longitude']
         )
-        RestaurantStaff.objects.create(
-            user=self.context.get('request').user, restaurant=restaurant
-        )
+        user = User.objects.create(**validated_data['merchant'])
+        Merchant.objects.create(
+            user=user, restaurant=restaurant
+        ) 
         return restaurant
 
 class MenuHoursSerializer(serializers.ModelSerializer):

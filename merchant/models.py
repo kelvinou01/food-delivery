@@ -181,10 +181,9 @@ class Restaurant(models.Model):
         return self.name
 
 
-class RestaurantStaff(models.Model):
+class Merchant(models.Model):
     user = models.OneToOneField('delivery.User', on_delete=models.CASCADE)
-    restaurant = models.ForeignKey('Restaurant', on_delete=models.CASCADE, 
-                                   related_name='staffs')
+    restaurant = models.OneToOneField('Restaurant', on_delete=models.CASCADE)
     
     def __str__(self):
         return f'{str(self.restaurant)} staff: {str(self.user)}'

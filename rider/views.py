@@ -7,14 +7,19 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from delivery.views import BaseRegister
 
 from merchant.models import Order
 from merchant.serializers import OrderCancelSerializer
 from rider.mixins import CurrentSessionMixin
 from rider.models import Session
 from rider.permissions import IsDeliveringThisOrder, IsRider, RiderOwnsSession
-from rider.serializers import OrderDetailSerializer, OrderListSerializer, \
+from rider.serializers import OrderDetailSerializer, OrderListSerializer, RiderRegisterSerializer, \
     SessionCreateSerializer, SessionExtendSerializer, SessionListSerializer
+
+    
+class RiderRegister(BaseRegister):
+    serializer_class = RiderRegisterSerializer
 
 
 class SessionListCreate(generics.ListCreateAPIView):
