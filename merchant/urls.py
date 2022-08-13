@@ -1,7 +1,7 @@
 
 from django.urls import path
 
-from merchant.views import HolidayDetail, MenuDetail, MenuHoursListCreate, MenuItemDetail, MenuItemsListCreate, MenuListCreate, MerchantRegister, OrderCancel, OrderDelay, OrderFinishCooking, OrderList, OrderDetail, PriceAdjustment, RestaurantCreate, Status, HolidayListCreate
+from merchant.views import HolidayDetail, MenuDetail, MenuHoursListCreate, MenuItemDetail, MenuItemsListCreate, MenuListCreate, OrderCancel, OrderDelay, OrderFinishCooking, OrderList, OrderDetail, PriceAdjustment, RestaurantCreate, Status, HolidayListCreate
 
 app_name = 'Merchant'
 

@@ -16,11 +16,6 @@ from merchant.serializers import HolidaySerializer, MenuDetailSerializer, MenuHo
     StatusSerializer
 
 
-class MerchantRegister(generics.CreateAPIView):
-     permission_classes = [IsAuthenticated, IsRestaurantStaff]
-     serializer_class = RegisterSerializer
-
-
 class RestaurantCreate(generics.CreateAPIView):
     permission_classes = []
     serializer_class = RestaurantSerializer
