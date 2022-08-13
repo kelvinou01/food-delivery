@@ -19,7 +19,6 @@ class MerchantRegisterSerializer(RegisterSerializer):
         extra_kwargs.update({
             field: {'write_only': 'True'} for field in fields
         })
-        pass
 
 
 class RestaurantSerializer(serializers.ModelSerializer):
@@ -28,7 +27,6 @@ class RestaurantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Restaurant
         fields = ['name', 'address', 'latitude', 'longitude', 'merchant']
-
     
     @transaction.atomic
     def create(self, validated_data):
