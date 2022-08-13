@@ -71,3 +71,4 @@
 
 
 # Backend Design 
+- Maintain single source of truth for everything in models. 
