@@ -29,7 +29,7 @@
 | GET | merchant/restaurants/{restaurant_id}/status/ | Get restaurant status | Authenticated |
 | POST | merchant/restaurants/{restaurant_id}/status/ | Pause or resume taking orders | Authenticated |
 | GET | merchant/restaurants/{restaurant_id}/holidays/ | Get upcoming holidays | Authenticated |
-| POST | merchant/restaurants/{restaurant_id}/holidays/ | Create holidays, which are exceptions to the restaurant's regular hours | Authenticated |
+| POST | merchant/restaurants/{restaurant_id}/holidays/ | Create holidays | Authenticated |
 | GET | merchant/restaurants/{restaurant_id}/holidays/{holiday_id} | Get holiday details | Authenticated |
 | PUT | merchant/restaurants/{restaurant_id}/holidays/{holiday_id} | Modify holiday details | Authenticated |
 | DELETE | merchant/restaurants/{restaurant_id}/holidays/{holiday_id} | Delete holiday | Authenticated |
