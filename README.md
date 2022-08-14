@@ -72,3 +72,4 @@
 # Backend Design 
 - Maintain single source of truth for everything in models. 
 - Request body processing happens in serializers only.
+- Implement logic within model methods to encourage code reuse, whenever possible.
