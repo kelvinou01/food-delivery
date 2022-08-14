@@ -49,8 +49,7 @@ class MenuDetail(generics.RetrieveUpdateDestroyAPIView):
         request_restaurant = Restaurant.objects.get(id=request.data['restaurant'])
         if user_restaurant != request_restaurant:
             return Response(code=404)
-
-        super().post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
 
 class MenuItemsListCreate(generics.ListCreateAPIView):
