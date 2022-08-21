@@ -1,6 +1,7 @@
 # food-delivery
+RESTFul API for a generic food delivery service with three apps — client, merchant, and rider. Also includes WebSocket endpoint for merchants to subscribe to new orders. 
 
-# Project Structure
+Endpoints are split into different folders based on which app they service:
 - `client/`: Endpoints for the app for end users.
 - `merchant/`: Endpoints for the app for restaurant owners.
 - `rider/`: Endpoints for the app for delivery riders.
@@ -10,7 +11,6 @@ The server is meant to be deployed as a whole, and not as 3 separate services.
 
 
 # Features
-
 ### Merchant app
 - Create a restaurant, menus, and use different menus for specific times and days of the week. 
 - Create or change menu items and item options.
@@ -46,9 +46,7 @@ The server is meant to be deployed as a whole, and not as 3 separate services.
 - Only client users should be able to access client app endpoints, etc.
 
 
-
 # API Documentation
-
 ### Client App
 | Request type | URL | Description | Permissions |
 |---|---|---|---|
