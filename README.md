@@ -1,5 +1,52 @@
 # food-delivery
 
+# Project Structure
+- `client/`: Endpoints for the app for end users.
+- `merchant/`: Endpoints for the app for restaurant owners.
+- `rider/`: Endpoints for the app for delivery riders.
+- `delivery/`: Base app, contains common models and logic.
+
+The server is meant to be deployed as a whole, and not as 3 separate services. 
+
+
+# Features
+
+### Merchant app
+- Create a restaurant, menus, and use different menus for specific times and days of the week. 
+- Create or change menu items and item options.
+- Go on a holiday, and temporarily close the restaurant.
+- Pause taking orders for a specified amount of time, or resume business immediately from a pause.
+- Subscribe to incoming orders via WebSocket.
+- Indicate that an order is ready for pickup (i.e. finished cooking).
+- Delay or cancel an order.
+- Adjust an order item based on specific customer requests.
+
+### Client app
+- List restaurants.
+- Get restaurant details, including menu items, prices, reviews and average rating.
+- Make a delivery or self-pickup order.
+- Cancel or confirm order received.
+- Write a review for a restaurant you've recently ordered from.
+
+### Rider app
+- Start a new session (i.e. begin taking orders!).
+- End or extend the current session.
+- List currently available delivery orders to take.
+- Accept a delivery request.
+- Confirm order pickup from restaurant.
+- Confirm successful delivery to client.
+- Cancel an order.
+
+
+# Backend Design 
+- Maintain single source of truth for everything in models.
+- Request body processing happens in serializers only.
+- Implement logic in model methods to encourage code reuse, whenever possible.
+- Prefer Django REST Framework generics and patterns.
+- Only client users should be able to access client app endpoints, etc.
+
+
+
 # API Documentation
 
 ### Client App
@@ -20,6 +67,10 @@
 
 
 ### Merchant App
+| WebSocket Action | URL | Description | Permissions |
+|---|---|---|---|
+| subscribe_to_order_actvity | merchant/restaurants/{restaurant_id}/orders/ | Subscribe to orders | Authenticated |
+
 | Request type | URL | Description | Permissions |
 |---|---|---|---|
 | POST | merchant/restaurants/ | Create a restaurant | AllowAny |
@@ -49,9 +100,6 @@
 | POST | merchant/restaurants/{restaurant_id}/orders/{order_id}/delay/ | Delay order by a specified amount of time | Authenticated |
 | POST | merchant/restaurants/{restaurant_id}/orders/{order_id}/items/{order_item_id}/adjust-price/ | Make price adjustment to order item | Authenticated |
 
-| WebSocket Action | URL | Description | Permissions |
-|---|---|---|---|
-| subscribe_to_order_actvity | merchant/restaurants/{restaurant_id}/orders/ | Subscribe to orders | Authenticated |
 
 ### Rider App
 | Request type | URL | Description | Permissions |
@@ -70,9 +118,3 @@
 | POST | rider/orders/{order_id}/complete/ | Confirm successful delivery to client | Authenticated|
 | POST | rider/orders/{order_id}/cancel/ | Cancel order | Authenticated|
 
-
-
-# Backend Design 
-- Maintain single source of truth for everything in models. 
-- Request body processing happens in serializers only.
-- Implement logic within model methods to encourage code reuse, whenever possible.
