@@ -5,6 +5,7 @@ from django.db import models
 from django.db import transaction
 from django.core.exceptions import ValidationError
 
+from client.models import Review
     
 
 class MenuHours(models.Model):
@@ -169,7 +170,7 @@ class Restaurant(models.Model):
                 day_of_the_week=current_time.weekday()
             )
             return menu_hours.menu
-        except:
+        except MenuHours.DoesNotExist:
             return None
 
     @property
@@ -335,7 +336,7 @@ class Order(models.Model):
 
     @property
     def price(self):
-        return sum(item.price for item in self.order_items.all())
+        return sum(item.price for item in self.items.all())
     
     def cancel(self, reason):
         if self.status == Order.CANCELLED:
