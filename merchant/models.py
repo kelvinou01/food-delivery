@@ -116,13 +116,16 @@ class Restaurant(models.Model):
     
     @cached_property
     def rating(self):
-        return 5.0
+        reviews = Review.objects.filter(restaurant=self)
+        return sum([review.rating for review in reviews]) / reviews.count()
 
     def refresh_from_db(self, *args, **kwargs):
         super(Restaurant, self).refresh_from_db(*args, **kwargs)
         try:
+            # Refresh cached property
             del self.__dict__['rating']
         except AttributeError:
+            # Property has not been cached
             pass
     
     @property
