@@ -12,30 +12,36 @@ The server is meant to be deployed as a whole, and not as 3 separate services.
 
 # Features
 ### Merchant app
-- Create a restaurant, menus, and use different menus for specific times and days of the week. 
-- Create or change menu items and item options.
-- Go on a holiday, and temporarily close the restaurant.
-- Pause taking orders for a specified amount of time, or resume business immediately from a pause.
-- Subscribe to incoming orders via WebSocket.
-- Indicate that an order is ready for pickup (i.e. finished cooking).
-- Delay or cancel an order.
-- Adjust an order item based on specific customer requests.
+- Restaurant management
+  - Create a restaurant, menus, and use different menus for specific times and days of the week. 
+  - Create or change menu items and item options.
+  - Go on a holiday, and temporarily close the restaurant.
+  - Pause taking orders for a specified amount of time, or resume business immediately from a pause.
+- Order management
+  - Subscribe to incoming orders via WebSocket.
+  - Indicate that an order is ready for pickup (i.e. finished cooking).
+  - Delay or cancel an order.
+  - Adjust an order item based on specific customer requests.
 
 ### Client app
-- List restaurants.
-- Get restaurant details, including menu items, prices, reviews and average rating.
-- Make a delivery or self-pickup order.
-- Cancel or confirm order received.
-- Write a review for a restaurant you've recently ordered from.
+- Restaurant browsing
+  - List restaurants.
+  - Get restaurant details, including menu items, prices, reviews and average rating.
+- Making orders
+  - Make a delivery or self-pickup order.
+  - Cancel or confirm order received.
+  - Write a review for a restaurant you've recently ordered from.
 
 ### Rider app
-- Start a new session (i.e. begin taking orders!).
-- End or extend the current session.
-- List currently available delivery orders to take.
-- Accept a delivery request.
-- Confirm order pickup from restaurant.
-- Confirm successful delivery to client.
-- Cancel an order.
+- Session management
+  - Start a new session (i.e. begin taking deliveries!).
+  - End or extend the current session.
+- Making deliveries
+  - List currently available delivery orders to take.
+  - Accept a delivery request.
+  - Confirm order pickup from restaurant.
+  - Confirm successful delivery to client.
+  - Cancel a delivery.
 
 
 # Backend Design 
