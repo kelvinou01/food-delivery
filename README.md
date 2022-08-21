@@ -50,7 +50,7 @@
 | POST | merchant/restaurants/{restaurant_id}/orders/{order_id}/items/{order_item_id}/adjust-price/ | Make price adjustment to order item | Authenticated |
 
 | WebSocket Action | URL | Description | Permissions |
-|---|---|---|
+|---|---|---|---|
 | subscribe_to_order_actvity | merchant/restaurants/{restaurant_id}/orders/ | Subscribe to orders | Authenticated |
 
 ### Rider App
