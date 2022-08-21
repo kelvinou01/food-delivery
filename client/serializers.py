@@ -189,6 +189,12 @@ class OrderItemListSerializer(serializers.ModelSerializer):
         model = OrderItem
         fields = ['id', 'instance_id', 'name', 'price', 'quantity', 'option_groups', 'price_adjustment']
 
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['price'] = float(ret['price'])
+        return ret
+
+
     def get_id(self, obj):
         return obj.menu_item.id
 
@@ -210,6 +216,15 @@ class OrderDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'restaurant', 'type', 'items', 'created', 'status', 'price', 'estimated_completion_datetime']
+    
+    # NOTE: Djangochannelsrestframework uses msgpack, which cannot serialize decimal.Decimal
+    # and datetime.datetime. All nested representations should be converted to str too.
+    # https://github.com/msgpack/msgpack-python/issues/12
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['price'] = str(ret['price'])
+        ret['estimated_completion_datetime'] = str(ret['estimated_completion_datetime'])
+        return ret
     
     def get_estimated_completion_datetime(self, obj):
         if obj.type == Order.DELIVERY:

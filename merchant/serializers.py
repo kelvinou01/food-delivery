@@ -220,6 +220,11 @@ class PriceAdjustmentSerializer(serializers.ModelSerializer):
         model = OrderItemPriceAdjustment    
         fields = ['adjustment', 'reason']
     
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['adjustment'] = str(ret['adjustment'])
+        return ret
+    
     def create(self, validated_data):
         try:
             return OrderItemPriceAdjustment.objects.create(

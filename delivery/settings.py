@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'phonenumber_field',
+    'channels',
     'delivery',
     'client', 
     'merchant', 
@@ -133,5 +134,19 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Channel layers
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+    }
+}
+
+
+# Constants
 DELIVERY_COST_PER_METER = 0.002
 ADDITIONAL_DELIVERY_TIME_PER_METER = 0.002
+
+ASGI_APPLICATION = 'delivery.asgi.application'
