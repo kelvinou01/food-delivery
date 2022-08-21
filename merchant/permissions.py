@@ -4,13 +4,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from merchant.models import Order, OrderItem, Restaurant
 
 
-class IsRestaurantStaff(permissions.BasePermission):
+class IsMerchant(permissions.BasePermission):
     '''
-    Checks if the user is a restaurant staff of the restaurant_id given in the url parameter
+    Checks if the user is the merchant of the restaurant_id given in the url parameter
     '''
     def has_permission(self, request, view):
         try: 
-            return request.user.restaurantstaff.restaurant.id == view.kwargs['restaurant_id']
+            return request.user.merchant.restaurant.id == view.kwargs['restaurant_id']
         except ObjectDoesNotExist:
             return False
 

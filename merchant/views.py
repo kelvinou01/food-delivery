@@ -9,10 +9,10 @@ from django.db import transaction
 from client.serializers import OrderDetailSerializer
 
 from merchant.models import Holiday, MenuHours, MenuItem, Order, PauseHours, Restaurant, Menu
-from merchant.permissions import IsRestaurantStaff, OrderIsForRestaurant, OrderItemIsInOrder
+from merchant.permissions import IsMerchant, OrderIsForRestaurant, OrderItemIsInOrder
 from merchant.serializers import HolidaySerializer, MenuDetailSerializer, MenuHoursSerializer, \
     MenuListSerializer, MenuItemListSerializer, MenuItemDetailSerializer, OrderCancelSerializer, \
-    OrderDelaySerializer, OrderListSerializer, PriceAdjustmentSerializer, RestaurantSerializer, RegisterSerializer, \
+    OrderDelaySerializer, OrderListSerializer, PriceAdjustmentSerializer, RestaurantSerializer, \
     StatusSerializer
 
 
@@ -22,10 +22,10 @@ class RestaurantCreate(generics.CreateAPIView):
     
 
 class MenuListCreate(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff]
+    permission_classes = [IsAuthenticated, IsMerchant]
 
     def get_queryset(self):
-        restaurant = self.request.user.restaurantstaff.restaurant
+        restaurant = self.request.user.merchant.restaurant
         return Menu.objects.filter(restaurant=restaurant)
     
     def get_serializer_class(self):
@@ -36,16 +36,16 @@ class MenuListCreate(generics.ListCreateAPIView):
 
 
 class MenuDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff]
+    permission_classes = [IsAuthenticated, IsMerchant]
     serializer_class = MenuDetailSerializer
     lookup_url_kwarg = 'menu_id'
 
     def get_queryset(self):
-        restaurant = self.request.user.restaurantstaff.restaurant
+        restaurant = self.request.user.merchant.restaurant
         return Menu.objects.filter(restaurant=restaurant)
     
     def post(self, request, *args, **kwargs):
-        user_restaurant = self.request.user.restaurantstaff.restaurant
+        user_restaurant = self.request.user.merchant.restaurant
         request_restaurant = Restaurant.objects.get(id=request.data['restaurant'])
         if user_restaurant != request_restaurant:
             return Response(code=404)
@@ -53,10 +53,10 @@ class MenuDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class MenuItemsListCreate(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff]
+    permission_classes = [IsAuthenticated, IsMerchant]
 
     def get_queryset(self):
-        restaurant = self.request.user.restaurantstaff.restaurant
+        restaurant = self.request.user.merchant.restaurant
         menu = self.kwargs['menu_id']
         return MenuItem.objects.filter(menu_category__menu_id=menu, 
                                        menu_category__menu__restaurant=restaurant)
@@ -69,23 +69,23 @@ class MenuItemsListCreate(generics.ListCreateAPIView):
 
 
 class MenuItemDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff]
+    permission_classes = [IsAuthenticated, IsMerchant]
     serializer_class = MenuItemDetailSerializer
     lookup_url_kwarg = 'item_id'
 
     def get_queryset(self):
-        restaurant = self.request.user.restaurantstaff.restaurant
+        restaurant = self.request.user.merchant.restaurant
         menu = self.kwargs['menu_id']
         return MenuItem.objects.filter(menu_category__menu_id=menu, 
                                        menu_category__menu__restaurant=restaurant)
 
 
 class MenuHoursListCreate(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff]
+    permission_classes = [IsAuthenticated, IsMerchant]
     serializer_class = MenuHoursSerializer
 
     def get_queryset(self):
-        restaurant = self.request.user.restaurantstaff.restaurant
+        restaurant = self.request.user.merchant.restaurant
         return MenuHours.objects.filter(menu__restaurant=restaurant)
     
     def create(self, request, *args, **kwargs):
@@ -106,28 +106,27 @@ class MenuHoursListCreate(generics.ListCreateAPIView):
 
  
 class OrderList(generics.ListAPIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff]
+    permission_classes = [IsAuthenticated, IsMerchant]
     serializer_class = OrderListSerializer
 
     def get_queryset(self):
         # TODO: Query param open=true -> Filter by unfulfilled orders
-        # TODO: Add websocket
-        restaurant = self.request.user.restaurantstaff.restaurant
+        restaurant = self.request.user.merchant.restaurant
         return Order.objects.filter(restaurant=restaurant)
 
 
 class OrderDetail(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff]
+    permission_classes = [IsAuthenticated, IsMerchant]
     serializer_class = OrderDetailSerializer
     lookup_url_kwarg = 'order_id'
 
     def get_queryset(self):
-        restaurant = self.request.user.restaurantstaff.restaurant
+        restaurant = self.request.user.merchant.restaurant
         return Order.objects.filter(restaurant=restaurant) 
 
 
 class Status(views.APIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff]
+    permission_classes = [IsAuthenticated, IsMerchant]
     serializer_class = StatusSerializer
 
     def get_serializer_context(self):
@@ -199,7 +198,7 @@ class Status(views.APIView):
 
 
 class HolidayListCreate(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff]
+    permission_classes = [IsAuthenticated, IsMerchant]
     serializer_class = HolidaySerializer
 
     def get_queryset(self):
@@ -216,7 +215,7 @@ class HolidayListCreate(generics.ListCreateAPIView):
 
 
 class HolidayDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff]
+    permission_classes = [IsAuthenticated, IsMerchant]
     serializer_class = HolidaySerializer
     lookup_url_kwarg = 'holiday_id'
     
@@ -226,13 +225,13 @@ class HolidayDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class OrderFinishCooking(views.APIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff, OrderIsForRestaurant]
+    permission_classes = [IsAuthenticated, IsMerchant, OrderIsForRestaurant]
     
     def post(self, request, *args, **kwargs):
         # Order must exist, because OrderIsForRestaurant
         order = Order.objects.get(
             id=self.kwargs['order_id'], 
-            restaurant=self.request.user.restaurantstaff.restaurant
+            restaurant=self.request.user.merchant.restaurant
         )
         try:
             order.finish_cooking()
@@ -242,7 +241,7 @@ class OrderFinishCooking(views.APIView):
         
 
 class OrderCancel(views.APIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff, OrderIsForRestaurant]
+    permission_classes = [IsAuthenticated, IsMerchant, OrderIsForRestaurant]
     serializer_class = OrderCancelSerializer
 
     def post(self, request, *args, **kwargs):
@@ -252,7 +251,7 @@ class OrderCancel(views.APIView):
         # Order must exist, because OrderIsForRestaurant
         order = Order.objects.get(
             id=self.kwargs['order_id'], 
-            restaurant=self.request.user.restaurantstaff.restaurant
+            restaurant=self.request.user.merchant.restaurant
         )
         try:
             order.cancel(reason=serializer.validated_data['reason'])
@@ -262,7 +261,7 @@ class OrderCancel(views.APIView):
 
 
 class OrderDelay(views.APIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff, OrderIsForRestaurant]
+    permission_classes = [IsAuthenticated, IsMerchant, OrderIsForRestaurant]
     serializer_class = OrderDelaySerializer
 
     def post(self, request, *args, **kwargs):
@@ -272,7 +271,7 @@ class OrderDelay(views.APIView):
         # Order must exist, because OrderIsForRestaurant
         order = Order.objects.get(
             id=self.kwargs['order_id'], 
-            restaurant=self.request.user.restaurantstaff.restaurant
+            restaurant=self.request.user.merchant.restaurant
         )
         try:
             order.delay(serializer.validated_data['delay_by'])
@@ -282,6 +281,6 @@ class OrderDelay(views.APIView):
 
 
 class PriceAdjustment(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated, IsRestaurantStaff, 
+    permission_classes = [IsAuthenticated, IsMerchant, 
                           OrderIsForRestaurant, OrderItemIsInOrder]
     serializer_class = PriceAdjustmentSerializer
