@@ -45,7 +45,7 @@ The server is meant to be deployed as a whole, and not as 3 separate services.
 
 
 # Backend Design 
-- Maintain single source of truth for everything in models.
+- Maintain single source of truth for everything.
 - Request body processing happens in serializers only.
 - Implement logic in model methods to encourage code reuse, whenever possible.
 - Prefer Django REST Framework generics and patterns.
