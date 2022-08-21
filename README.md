@@ -1,4 +1,4 @@
-# food-delivery
+# Food Delivery Service API
 RESTFul API for a generic food delivery service with three apps — client, merchant, and rider. Also includes WebSocket endpoint for merchants to subscribe to new orders. 
 
 Endpoints are split into different folders based on which app they service:
