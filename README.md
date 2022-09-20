@@ -9,6 +9,12 @@ Endpoints are split into different folders based on which app they service:
 
 The server is meant to be deployed as a whole, and not as 3 separate services. 
 
+# Backend Design 
+- Maintain single source of truth for everything.
+- Implement logic in model methods to encourage code reuse, whenever possible.
+- Prefer Django REST Framework generics and patterns.
+- Request body processing happens in serializers only.
+- Only client users should be able to access client app endpoints, etc.
 
 # Features
 ### Merchant app
@@ -42,15 +48,6 @@ The server is meant to be deployed as a whole, and not as 3 separate services.
   - Confirm order pickup from restaurant.
   - Confirm successful delivery to client.
   - Cancel a delivery.
-
-
-# Backend Design 
-- Maintain single source of truth for everything.
-- Request body processing happens in serializers only.
-- Implement logic in model methods to encourage code reuse, whenever possible.
-- Prefer Django REST Framework generics and patterns.
-- Only client users should be able to access client app endpoints, etc.
-
 
 # API Documentation
 ### Client App
