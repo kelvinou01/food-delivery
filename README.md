@@ -74,7 +74,7 @@ The server is meant to be deployed as a whole, and not as 3 separate services.
 
 | Request type | URL | Description | Permissions |
 |---|---|---|---|
-| POST | merchant/restaurants/ | Create a restaurant | AllowAny |
+| POST | merchant/restaurants/ | Create a restaurant | Any |
 | GET | merchant/restaurants/{restaurant_id}/menu-hours/ | List the restaurant's menu hours | Authenticated |
 | POST | merchant/restaurants/{restaurant_id}/menu-hours/ | Update menu hours | Authenticated |
 | GET | merchant/restaurants/{restaurant_id}/status/ | Get restaurant status | Authenticated |
